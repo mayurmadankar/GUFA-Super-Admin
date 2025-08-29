@@ -104,7 +104,6 @@ const DoctorDashboard = () => {
                 <Tab.Pane eventKey="offline">
                   <OfflineDoctorList />
                 </Tab.Pane>
-
                 <Tab.Pane eventKey="app_not_installed">
                   <AppNotInstalled />
                 </Tab.Pane>

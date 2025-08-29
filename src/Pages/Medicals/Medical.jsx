@@ -20,7 +20,6 @@ const Medical = () => {
   const [selectedPatients, setSelectedPatients] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  //pagination state
   const [page, setPage] = useState(1);
   const perPage = 10;
 
@@ -40,13 +39,16 @@ const Medical = () => {
   //   navigate("/patient/patient_detail");
   // };
 
+  const handleEditMedical = (id) => {
+    navigate(`/medical/medical_edit/${id}`);
+  };
+
   const handleCheckboxChange = (id) => {
     setSelectedPatients((prev) =>
       prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
     );
   };
 
-  // Handle search input change
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
   }, []);
@@ -55,7 +57,6 @@ const Medical = () => {
     setPage(1);
   }, [searchTerm]);
 
-  // Filter doctors based on search term
   const filteredMedicals =
     onbordedMedicalList?.data
       ?.slice()
@@ -128,9 +129,11 @@ const Medical = () => {
     document.body.removeChild(link);
   };
 
-  //pagination logic
   const totalPages = Math.ceil(filteredMedicals.length / perPage);
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const paginatedMedicals = filteredMedicals.slice(
     (page - 1) * perPage,
     page * perPage
@@ -264,7 +267,9 @@ const Medical = () => {
                       </button>
                       <button
                         className="btn btn-warning btn-sm mx-1"
-                        // onClick={() => handleEditDoctor(doctor.doctor_id)}
+                        onClick={() =>
+                          handleEditMedical(medical.enterprises_id)
+                        }
                       >
                         Edit
                       </button>

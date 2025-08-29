@@ -1,0 +1,96 @@
+.version-container {
+  display: flex;
+  gap: 80px;
+  margin-top: 40px;
+}
+.left-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px 16px;
+}
+.right-panel {
+  flex: 2;
+  background: #f7f7f7;
+  padding: 24px;
+  border-radius: 8px;
+}
+.add-btn,
+.submit-btn {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.version-form {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.version-form input[type="text"] {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.right-panel ul {
+  list-style: none;
+  padding: 0;
+}
+.right-panel li {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+.date {
+  float: right;
+  color: #888;
+  font-size: 0.9em;
+}
+.version-form-radio-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.version-form-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.info-msg {
+  color: #0679ec;
+  margin: 8px 0;
+}
+.success-msg {
+  color: #1da824;
+  margin: 8px 0;
+}
+.error-msg {
+  color: #f10404;
+  margin: 8px 0;
+}
+.apk-upload-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+.custom-file-label {
+  background: #1976d2;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.file-name {
+  color: #333;
+  font-size: 0.95em;
+}

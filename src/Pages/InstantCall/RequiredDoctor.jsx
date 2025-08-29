@@ -140,6 +140,7 @@ const RequiredDoctor = () => {
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalFilteredPages) {
       setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 

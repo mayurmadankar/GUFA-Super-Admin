@@ -41,6 +41,8 @@ const ApprovedDoctors = () => {
   const { approvedDoctors, loading, error } = useSelector(
     (state) => state.doctorUser
   );
+
+  // console.log("Approved Doctors:", approvedDoctors);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDoctors, setSelectedDoctors] = useState([]);
 
@@ -103,9 +105,14 @@ const ApprovedDoctors = () => {
       );
     }) || [];
 
+  // console.log("Filtered Doctors:", filteredDoctors);
+
   //pagiantion logic
   const totalPages = Math.ceil(filteredDoctors.length / perPage);
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const paginatedDoctors = filteredDoctors.slice(
     (page - 1) * perPage,
     page * perPage

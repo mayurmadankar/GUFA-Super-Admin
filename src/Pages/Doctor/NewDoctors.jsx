@@ -162,7 +162,10 @@ const NewDoctors = () => {
 
   //pagiantion logic
   const totalPages = Math.ceil(filteredDoctors.length / perPage);
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const paginatedDoctors = filteredDoctors.slice(
     (page - 1) * perPage,
     page * perPage

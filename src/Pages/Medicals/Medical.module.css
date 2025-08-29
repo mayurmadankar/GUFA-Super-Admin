@@ -1,17 +1,17 @@
-.hospital_container{
-    padding-top: 75px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
-    min-height: 100vh;
+.hospital_container {
+  padding-top: 75px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  min-height: 100vh;
 }
 
-.view_medical_container{
-    padding-top: 75px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
-    min-height: 100vh;
+.view_medical_container {
+  padding-top: 75px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  min-height: 100vh;
 }
 .stickyColumn {
   position: sticky;

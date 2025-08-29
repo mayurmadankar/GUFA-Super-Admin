@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {fetchIndivisualMedical} from '../../Components/Redux/authMedicalOnboard'
 import MedicalCallHistory from './MedicalCallHistory';
+
 const ViewMedicalPage = () => {
     const navigate=useNavigate();
     const {medical_id}=useParams();

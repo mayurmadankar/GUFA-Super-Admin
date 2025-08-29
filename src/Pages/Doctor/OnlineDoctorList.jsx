@@ -33,6 +33,14 @@ const OnlineDoctorList = () => {
     });
   };
 
+  const handleCheckboxChange = (doctorId) => {
+    setSelectedDoctors((prev) =>
+      prev.includes(doctorId)
+        ? prev.filter((id) => id !== doctorId)
+        : [...prev, doctorId]
+    );
+  };
+
   const handleDownloadSelected = () => {
     const selectedData = filteredDoctors.filter((d) =>
       selectedDoctors.includes(d.doctor_id)
@@ -48,39 +56,47 @@ const OnlineDoctorList = () => {
       "Doctor Name",
       "Gender",
       "Specialization",
-      "Qualifications",
-      "Registration Number",
-      "Council Name",
-      "License Verification",
-      "Consultation Fee",
-      "Availability Status",
-      "Language Spoken",
-      "Profile Status",
-      "Total Consultations",
-      "Registration Date",
-      "Email",
-      "Phone",
-      "Experience"
+      "Clinic Name",
+      "Location",
+      "Contact Number",
+      "Email"
+      // "Qualifications",
+      // "Registration Number",
+      // "Council Name",
+      // "License Verification",
+      // "Consultation Fee",
+      // "Availability Status",
+      // "Language Spoken",
+      // "Profile Status",
+      // "Total Consultations",
+      // "Registration Date",
+      // "Email",
+      // "Phone",
+      // "Experience"
     ];
 
     const rows = selectedData.map((d) => [
       d.doctor_id,
-      `${d.first_name} ${d.last_name}`,
+      `${d.name || "-"}`,
       d.gender || "-",
       specialityMap[d.speciality] || "Unknown",
-      d.qualification,
-      d.license || "-",
-      d.council_name || "-",
-      "Verified",
-      d.consultation_fee || "99",
-      "Online/Offline/Busy", // Replace with actual availability if dynamic
-      d.language || "Hindi/English",
-      "Active/Suspended", // Replace with actual profile status if dynamic
-      d.total_consultation || "-",
-      new Date(d.date_joined).toLocaleDateString(),
-      d.email,
-      d.contact_number,
-      d.experience
+      d.clinic_name || "-",
+      d.location || "-",
+      d.number || "-",
+      d.email || "-"
+      // d.qualification,
+      // d.license || "-",
+      // d.council_name || "-",
+      // "Verified",
+      // d.consultation_fee || "99",
+      // "Online/Offline/Busy", // Replace with actual availability if dynamic
+      // d.language || "Hindi/English",
+      // "Active/Suspended", // Replace with actual profile status if dynamic
+      // d.total_consultation || "-",
+      // new Date(d.date_joined).toLocaleDateString(),
+      // d.email,
+      // d.contact_number,
+      // d.experience
     ]);
 
     const csvContent = [headers, ...rows]
@@ -124,13 +140,11 @@ const OnlineDoctorList = () => {
     23: "Trichologist"
   };
 
-  // Handle search input change
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
     setPage(1);
   }, []);
 
-  // Filter doctors based on search term
   useEffect(() => {
     const doctors = liveDoctorList?.logged_in_and_available || [];
 
@@ -156,9 +170,13 @@ const OnlineDoctorList = () => {
     }
   }, [liveDoctorList?.logged_in_and_available, searchTerm]);
 
-  // Updated pagination logic to use filtered doctors
+  // console.log("Filtered Doctors:", filteredDoctors);
+
   const totalPages = Math.ceil(filteredDoctors.length / perPage);
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const paginationLiveDoctors = filteredDoctors.slice(
     (page - 1) * perPage,
     page * perPage
@@ -309,9 +327,34 @@ const OnlineDoctorList = () => {
         </Box>
       </Box>
 
+      <Button
+        variant="contained"
+        color="primary"
+        className="mt-2 mb-2"
+        onClick={handleDownloadSelected}
+      >
+        Download Selected
+      </Button>
+
       <table className="table text-center">
         <thead className="thead-light">
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                onChange={(e) =>
+                  setSelectedDoctors(
+                    e.target.checked
+                      ? filteredDoctors?.map((p) => p.doctor_id)
+                      : []
+                  )
+                }
+                checked={
+                  selectedDoctors.length === filteredDoctors.length &&
+                  filteredDoctors.length > 0
+                }
+              />
+            </th>
             <th>Doctor Id</th>
             <th>Doctor Name</th>
             <th>Qualification</th>
@@ -342,6 +385,13 @@ const OnlineDoctorList = () => {
           <tbody>
             {paginationLiveDoctors.map((doctor) => (
               <tr key={doctor?.doctor_id} style={{ cursor: "pointer" }}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedDoctors.includes(doctor?.doctor_id)}
+                    onChange={() => handleCheckboxChange(doctor?.doctor_id)}
+                  />
+                </td>
                 <td>{doctor?.doctor_id}</td>
                 <td>{doctor?.name}</td>
                 <td>mbbs</td>

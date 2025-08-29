@@ -8,15 +8,14 @@ const Support = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Pagination state
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  // Add search functionality
+  const [selectedPatients, setSelectedPatients] = useState([]);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
 
-  // Fetch users who requested support
   const fetchSupportUsers = async () => {
     try {
       setLoading(true);
@@ -149,9 +148,15 @@ const Support = () => {
     }
   };
 
+  const handleCheckboxChange = (id) => {
+    setSelectedPatients((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page when searching
+    setPage(1);
   }, []);
 
   useEffect(() => {
@@ -197,7 +202,33 @@ const Support = () => {
     }
   }, [users, searchTerm]);
 
-  // Calculate pagination based on filtered data
+  const handleDownloadSelected = () => {
+    const selectedData = filteredUsers.filter((user) =>
+      selectedPatients.includes(user.user_id)
+    );
+    if (selectedData.length === 0) {
+      alert("No patients selected for download.");
+      return;
+    }
+    const headers = Object.keys(selectedData[0]);
+    const csvContent = [
+      headers.join(","),
+      ...selectedData.map((row) =>
+        headers.map((field) => JSON.stringify(row[field] || "")).join(",")
+      )
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "selected_support_patients.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalFilteredPages = Math.ceil(filteredUsers.length / perPage);
   const paginatedUsers = filteredUsers.slice(
     (page - 1) * perPage,
@@ -211,6 +242,7 @@ const Support = () => {
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalFilteredPages) {
       setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -231,21 +263,44 @@ const Support = () => {
         </Alert>
       ) : (
         <>
-          {/* Search input */}
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Medical Name, Location, Speciality, Patient Name, Mobile, Payment Status, Support Status, etc."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
-
           <div className="table-responsive">
+            <Button
+              variant="primary"
+              className="mt-2 mb-2"
+              onClick={handleDownloadSelected}
+            >
+              Download Selected
+            </Button>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by Medical Name, Location, Speciality, Patient Name, Mobile, Payment Status, Support Status, etc."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
             <Table striped bordered hover>
               <thead className="table-primary text-center">
                 <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={
+                        filteredUsers.length > 0 &&
+                        filteredUsers.every((user) =>
+                          selectedPatients.includes(user.user_id)
+                        )
+                      }
+                      onChange={(e) =>
+                        setSelectedPatients(
+                          e.target.checked
+                            ? filteredUsers.map((user) => user.user_id)
+                            : []
+                        )
+                      }
+                    />
+                  </th>
                   <th>Sr No.</th>
                   <th>Date and Time</th>
                   <th>Medical Name</th>
@@ -273,6 +328,13 @@ const Support = () => {
                 ) : (
                   paginatedUsers.map((user, i) => (
                     <tr key={user.user_id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedPatients.includes(user.user_id)}
+                          onChange={() => handleCheckboxChange(user.user_id)}
+                        />
+                      </td>
                       <td>{(page - 1) * perPage + i + 1}</td>
                       <td>
                         {user.requested_at

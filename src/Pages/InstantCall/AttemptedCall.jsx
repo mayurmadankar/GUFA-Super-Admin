@@ -7,14 +7,14 @@ const AttemptedCall = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [perPage] = useState(10); // Fixed per page
+  const [perPage] = useState(10);
   // const [totalPages, setTotalPages] = useState(1);
 
-  // Add search functionality
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCalls, setFilteredCalls] = useState([]);
 
-  // to convert the long and latti into location name
+  const [selectedPatients, setSelectedPatients] = useState([]);
+
   const reverseGeocode = async (lat, lon) => {
     try {
       const response = await axios.get(
@@ -81,6 +81,12 @@ const AttemptedCall = () => {
     }
   }, []);
 
+  const handleCheckboxChange = (id) => {
+    setSelectedPatients((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
+
   const handleSearch = useCallback((e) => {
     setSearchTerm(e.target.value);
     setPage(1);
@@ -132,7 +138,32 @@ const AttemptedCall = () => {
     }
   }, [calls, searchTerm]);
 
-  // Pagination for filtered data
+  const handleDownloadSelected = () => {
+    const selectedData = filteredCalls.filter((call) =>
+      selectedPatients.includes(call.patient_id)
+    );
+    if (selectedData.length === 0) {
+      alert("Please select at least one patient to download.");
+      return;
+    }
+    const headers = Object.keys(selectedData[0]);
+    const csvRows = [
+      headers.join(","),
+      ...selectedData.map((p) =>
+        headers.map((field) => `"${p[field]}"`).join(",")
+      )
+    ];
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "selected_waiting_patients.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalFilteredPages = Math.ceil(filteredCalls.length / perPage);
   const paginatedCalls = filteredCalls.slice(
     (page - 1) * perPage,
@@ -146,6 +177,7 @@ const AttemptedCall = () => {
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalFilteredPages) {
       setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -165,18 +197,24 @@ const AttemptedCall = () => {
         </Alert>
       ) : (
         <>
-          {/* Search input */}
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Medical Name, Location, Speciality, Patient Name, Mobile, Payment Status, etc."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
-
           <div className="table-responsive">
+            <Button
+              variant="primary"
+              className="mt-2 mb-2"
+              onClick={handleDownloadSelected}
+            >
+              Download Selected
+            </Button>
+
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by Medical Name, Location, Speciality, Patient Name, Mobile, Payment Status, etc."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
             <Table
               striped
               bordered
@@ -185,6 +223,22 @@ const AttemptedCall = () => {
             >
               <thead className="table-primary text-center">
                 <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectedPatients.length === filteredCalls.length &&
+                        filteredCalls.length > 0
+                      }
+                      onChange={(e) => {
+                        setSelectedPatients(
+                          e.target.checked
+                            ? filteredCalls.map((call) => call.patient_id)
+                            : []
+                        );
+                      }}
+                    />
+                  </th>
                   <th>Sr No.</th>
                   {/* <th>Session ID</th> */}
                   <th>Date and Time</th>
@@ -217,6 +271,13 @@ const AttemptedCall = () => {
                 ) : (
                   paginatedCalls.map((call, i) => (
                     <tr key={`${call.session_id}-${i}`}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedPatients.includes(call.patient_id)}
+                          onChange={() => handleCheckboxChange(call.patient_id)}
+                        />
+                      </td>
                       <td>{(page - 1) * perPage + i + 1}</td>
                       {/* <td>{call.session_id}</td> */}
                       <td>

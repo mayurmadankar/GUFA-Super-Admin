@@ -498,6 +498,7 @@ const MedicalCallHistory = ({ medicalId }) => {
                           <th>Payment status</th>
                           <th>Prescribed drugs</th>
                           <th>Call Duration</th>
+                          <th>Completed status</th>
                           <th>Prescription</th>
                         </tr>
                       </thead>
@@ -523,11 +524,13 @@ const MedicalCallHistory = ({ medicalId }) => {
                               {/* <td>{row.prescription || "N/A"}</td> */}
                               <td>{row.prescribed_drugs || "N/A"}</td>
                               <td>{row.call_duration || "N/A"}</td>
+                              <td>{row.completed_status || "N/A"}</td>
                               <td>
                                 <Button variant="contained" size="small">
                                   View
                                 </Button>
                               </td>
+
                               {/* <td>
                             <Button variant="contained" size="small">
                               View

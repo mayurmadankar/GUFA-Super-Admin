@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Spinner, Alert, Button, Pagination } from "react-bootstrap";
 import axios from "axios";
+import { animator } from "chart.js";
 
 const ConsultationAnalytics = () => {
   const [analytics, setAnalytics] = useState([]);
@@ -15,7 +16,8 @@ const ConsultationAnalytics = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredAnalytics, setFilteredAnalytics] = useState([]);
 
-  // Fetch analytics data from backend API
+  const [selectedAnalytics, setSelectedAnalytics] = useState([]);
+
   const fetchAnalytics = async () => {
     try {
       setLoading(true);
@@ -37,6 +39,7 @@ const ConsultationAnalytics = () => {
       // Dummy data for UI testing
       setAnalytics([
         {
+          analytics_id: 1,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -46,6 +49,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 2,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -55,6 +59,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 3,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -64,6 +69,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 4,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -73,6 +79,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 5,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -82,6 +89,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 6,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -91,6 +99,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 7,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -100,6 +109,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 8,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -109,6 +119,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 9,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -118,6 +129,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 10,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -127,6 +139,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 11,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -136,6 +149,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 12,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -145,6 +159,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Cetrizine, Ranitidine"
         },
         {
+          analytics_id: 13,
           date: "2025-06-01",
           total_consultations: 67,
           unique_patients: 50,
@@ -154,6 +169,7 @@ const ConsultationAnalytics = () => {
           most_prescribed_drugs: "Paracetamol, Amox"
         },
         {
+          analytics_id: 14,
           date: "2025-06-02",
           total_consultations: 72,
           unique_patients: 55,
@@ -170,13 +186,18 @@ const ConsultationAnalytics = () => {
     }
   };
 
-  // Search handler
+  const handleCheckboxChange = (analytics_id) => {
+    setSelectedAnalytics((prevSelected) =>
+      prevSelected.includes(analytics_id)
+        ? prevSelected.filter((id) => id !== analytics_id)
+        : [...prevSelected, analytics_id]
+    );
+  };
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page when searching
+    setPage(1);
   };
 
-  // Filter analytics based on search term
   useEffect(() => {
     if (!searchTerm) {
       setFilteredAnalytics(analytics);
@@ -208,10 +229,37 @@ const ConsultationAnalytics = () => {
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalFilteredPages) {
       setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  // Calculate pagination for filtered data
+  const handleDownloadSelected = () => {
+    const selectedData = filteredAnalytics.filter((call) =>
+      selectedAnalytics.includes(call.analytics_id)
+    );
+    if (selectedData.length === 0) {
+      alert("No patients selected for download.");
+      return;
+    }
+    const headers = Object.keys(selectedData[0]);
+    const csvRows = [
+      headers.join(","),
+      ...selectedData.map((call) =>
+        headers.map((field) => `${call[field]}`).join(",")
+      )
+    ].join("\n");
+
+    const blob = new Blob([csvRows], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "selected_consultation_analytics.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const totalFilteredPages = Math.ceil(filteredAnalytics.length / perPage);
   const paginatedAnalytics = filteredAnalytics.slice(
     (page - 1) * perPage,
@@ -236,19 +284,43 @@ const ConsultationAnalytics = () => {
       ) : (
         <>
           {/* Search input */}
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Search by Date, Consultations Count, Specialties, Prescribed Drugs, etc."
-              value={searchTerm}
-              onChange={handleSearch}
-            />
-          </div>
+
           <div className="table-responsive">
+            <Button
+              variant="primary"
+              className="mt-2 mb-2"
+              onClick={handleDownloadSelected}
+            >
+              Download Selected
+            </Button>
+            <div className="mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search by Date, Consultations Count, Specialties, Prescribed Drugs, etc."
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
             <Table striped bordered hover>
               <thead className="table-primary text-center">
                 <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={
+                        selectedAnalytics.length === filteredAnalytics.length &&
+                        filteredAnalytics.length > 0
+                      }
+                      onChange={(e) => {
+                        setSelectedAnalytics(
+                          e.target.checked
+                            ? filteredAnalytics.map((item) => item.analytics_id)
+                            : []
+                        );
+                      }}
+                    />
+                  </th>
                   <th>Sr No.</th>
                   <th>Date</th>
                   <th>Total Consultations</th>
@@ -271,6 +343,15 @@ const ConsultationAnalytics = () => {
                 ) : (
                   paginatedAnalytics.map((row, i) => (
                     <tr key={`${row.date}-${i}`}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selectedAnalytics.includes(row.analytics_id)}
+                          onChange={() =>
+                            handleCheckboxChange(row.analytics_id)
+                          }
+                        />
+                      </td>
                       <td>{(page - 1) * perPage + i + 1}</td>
                       <td>{row.date}</td>
                       <td>{row.total_consultations}</td>

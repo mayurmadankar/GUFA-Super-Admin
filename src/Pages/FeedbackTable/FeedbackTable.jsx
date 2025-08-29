@@ -1,130 +1,134 @@
 import React, { useState } from "react";
 import "./FeedbackTable.css";
 import Button from "@mui/material/Button";
+import { Pagination } from "react-bootstrap";
 
 const FeedbackTable = () => {
-const complaintList = [
-  {
-    complaint_id: "COMP001",
-    raised_by_user_id: "USER001",
-    against_doctor_id: "DOC101",
-    consultation_id: "CONS501",
-    complaint_type: "Rude Behavior",
-    complaint_text: "The doctor was unprofessional during the consultation.",
-    status: "Pending",
-    resolution_notes: "",
-    created_at: "2025-05-27T10:30:00",
-    resolved_at: null,
-  },
-  {
-    complaint_id: "COMP002",
-    raised_by_user_id: "USER002",
-    against_doctor_id: "DOC102",
-    consultation_id: "CONS502",
-    complaint_type: "Incorrect Prescription",
-    complaint_text: "The prescribed medicine caused an allergic reaction.",
-    status: "Resolved",
-    resolution_notes: "Doctor issued a new prescription and apologized.",
-    created_at: "2025-05-26T14:15:00",
-    resolved_at: "2025-05-27T09:00:00",
-  },
-  {
-    complaint_id: "COMP003",
-    raised_by_user_id: "USER003",
-    against_doctor_id: "DOC103",
-    consultation_id: "CONS503",
-    complaint_type: "Late Appointment",
-    complaint_text: "The doctor joined the consultation 20 minutes late.",
-    status: "Pending",
-    resolution_notes: "",
-    created_at: "2025-05-25T11:00:00",
-    resolved_at: null,
-  },
-  {
-    complaint_id: "COMP004",
-    raised_by_user_id: "USER004",
-    against_doctor_id: "DOC104",
-    consultation_id: "CONS504",
-    complaint_type: "Misdiagnosis",
-    complaint_text: "Diagnosis was inaccurate, confirmed by another doctor.",
-    status: "Resolved",
-    resolution_notes: "Refund issued and follow-up arranged.",
-    created_at: "2025-05-24T15:20:00",
-    resolved_at: "2025-05-25T08:00:00",
-  },
-  {
-    complaint_id: "COMP005",
-    raised_by_user_id: "USER005",
-    against_doctor_id: "DOC105",
-    consultation_id: "CONS505",
-    complaint_type: "Technical Issues",
-    complaint_text: "Call disconnected multiple times during consultation.",
-    status: "Pending",
-    resolution_notes: "",
-    created_at: "2025-05-23T13:45:00",
-    resolved_at: null,
-  },
-  {
-    complaint_id: "COMP006",
-    raised_by_user_id: "USER006",
-    against_doctor_id: "DOC106",
-    consultation_id: "CONS506",
-    complaint_type: "Unresponsive",
-    complaint_text: "Doctor did not respond to queries post consultation.",
-    status: "Resolved",
-    resolution_notes: "Doctor contacted patient for clarification.",
-    created_at: "2025-05-22T16:00:00",
-    resolved_at: "2025-05-23T10:30:00",
-  },
-  {
-    complaint_id: "COMP007",
-    raised_by_user_id: "USER007",
-    against_doctor_id: "DOC107",
-    consultation_id: "CONS507",
-    complaint_type: "Inappropriate Comments",
-    complaint_text: "Doctor made uncomfortable remarks during consultation.",
-    status: "Pending",
-    resolution_notes: "",
-    created_at: "2025-05-21T12:30:00",
-    resolved_at: null,
-  },
-  {
-    complaint_id: "COMP008",
-    raised_by_user_id: "USER008",
-    against_doctor_id: "DOC108",
-    consultation_id: "CONS508",
-    complaint_type: "No Show",
-    complaint_text: "Doctor did not join the scheduled consultation.",
-    status: "Resolved",
-    resolution_notes: "Consultation rescheduled, no charge applied.",
-    created_at: "2025-05-20T14:10:00",
-    resolved_at: "2025-05-21T09:00:00",
-  },
-  {
-    complaint_id: "COMP009",
-    raised_by_user_id: "USER009",
-    against_doctor_id: "DOC109",
-    consultation_id: "CONS509",
-    complaint_type: "Rude Behavior",
-    complaint_text: "Doctor refused to answer all the patient’s concerns.",
-    status: "Pending",
-    resolution_notes: "",
-    created_at: "2025-05-19T10:00:00",
-    resolved_at: null,
-  },
-  {
-    complaint_id: "COMP010",
-    raised_by_user_id: "USER010",
-    against_doctor_id: "DOC110",
-    consultation_id: "CONS510",
-    complaint_type: "Overcharged",
-    complaint_text: "The consultation fee was more than shown on booking.",
-    status: "Resolved",
-    resolution_notes: "Partial refund issued.",
-    created_at: "2025-05-18T17:00:00",
-    resolved_at: "2025-05-19T10:45:00",
-  },
-];
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+
+  const complaintList = [
+    {
+      complaint_id: "COMP001",
+      raised_by_user_id: "USER001",
+      against_doctor_id: "DOC101",
+      consultation_id: "CONS501",
+      complaint_type: "Rude Behavior",
+      complaint_text: "The doctor was unprofessional during the consultation.",
+      status: "Pending",
+      resolution_notes: "",
+      created_at: "2025-05-27T10:30:00",
+      resolved_at: null
+    },
+    {
+      complaint_id: "COMP002",
+      raised_by_user_id: "USER002",
+      against_doctor_id: "DOC102",
+      consultation_id: "CONS502",
+      complaint_type: "Incorrect Prescription",
+      complaint_text: "The prescribed medicine caused an allergic reaction.",
+      status: "Resolved",
+      resolution_notes: "Doctor issued a new prescription and apologized.",
+      created_at: "2025-05-26T14:15:00",
+      resolved_at: "2025-05-27T09:00:00"
+    },
+    {
+      complaint_id: "COMP003",
+      raised_by_user_id: "USER003",
+      against_doctor_id: "DOC103",
+      consultation_id: "CONS503",
+      complaint_type: "Late Appointment",
+      complaint_text: "The doctor joined the consultation 20 minutes late.",
+      status: "Pending",
+      resolution_notes: "",
+      created_at: "2025-05-25T11:00:00",
+      resolved_at: null
+    },
+    {
+      complaint_id: "COMP004",
+      raised_by_user_id: "USER004",
+      against_doctor_id: "DOC104",
+      consultation_id: "CONS504",
+      complaint_type: "Misdiagnosis",
+      complaint_text: "Diagnosis was inaccurate, confirmed by another doctor.",
+      status: "Resolved",
+      resolution_notes: "Refund issued and follow-up arranged.",
+      created_at: "2025-05-24T15:20:00",
+      resolved_at: "2025-05-25T08:00:00"
+    },
+    {
+      complaint_id: "COMP005",
+      raised_by_user_id: "USER005",
+      against_doctor_id: "DOC105",
+      consultation_id: "CONS505",
+      complaint_type: "Technical Issues",
+      complaint_text: "Call disconnected multiple times during consultation.",
+      status: "Pending",
+      resolution_notes: "",
+      created_at: "2025-05-23T13:45:00",
+      resolved_at: null
+    },
+    {
+      complaint_id: "COMP006",
+      raised_by_user_id: "USER006",
+      against_doctor_id: "DOC106",
+      consultation_id: "CONS506",
+      complaint_type: "Unresponsive",
+      complaint_text: "Doctor did not respond to queries post consultation.",
+      status: "Resolved",
+      resolution_notes: "Doctor contacted patient for clarification.",
+      created_at: "2025-05-22T16:00:00",
+      resolved_at: "2025-05-23T10:30:00"
+    },
+    {
+      complaint_id: "COMP007",
+      raised_by_user_id: "USER007",
+      against_doctor_id: "DOC107",
+      consultation_id: "CONS507",
+      complaint_type: "Inappropriate Comments",
+      complaint_text: "Doctor made uncomfortable remarks during consultation.",
+      status: "Pending",
+      resolution_notes: "",
+      created_at: "2025-05-21T12:30:00",
+      resolved_at: null
+    },
+    {
+      complaint_id: "COMP008",
+      raised_by_user_id: "USER008",
+      against_doctor_id: "DOC108",
+      consultation_id: "CONS508",
+      complaint_type: "No Show",
+      complaint_text: "Doctor did not join the scheduled consultation.",
+      status: "Resolved",
+      resolution_notes: "Consultation rescheduled, no charge applied.",
+      created_at: "2025-05-20T14:10:00",
+      resolved_at: "2025-05-21T09:00:00"
+    },
+    {
+      complaint_id: "COMP009",
+      raised_by_user_id: "USER009",
+      against_doctor_id: "DOC109",
+      consultation_id: "CONS509",
+      complaint_type: "Rude Behavior",
+      complaint_text: "Doctor refused to answer all the patient’s concerns.",
+      status: "Pending",
+      resolution_notes: "",
+      created_at: "2025-05-19T10:00:00",
+      resolved_at: null
+    },
+    {
+      complaint_id: "COMP010",
+      raised_by_user_id: "USER010",
+      against_doctor_id: "DOC110",
+      consultation_id: "CONS510",
+      complaint_type: "Overcharged",
+      complaint_text: "The consultation fee was more than shown on booking.",
+      status: "Resolved",
+      resolution_notes: "Partial refund issued.",
+      created_at: "2025-05-18T17:00:00",
+      resolved_at: "2025-05-19T10:45:00"
+    }
+  ];
   const [selectedPayments, setSelectedPayments] = useState([]);
   const handleCheckboxChange = (id) => {
     setSelectedPayments((prev) =>
@@ -141,35 +145,49 @@ const complaintList = [
   // };
 
   const handleDownloadSelected = () => {
-  const selectedData = complaintList.filter((p) =>
-    selectedPayments.includes(p.complaint_id)
-  );
+    const selectedData = complaintList.filter((p) =>
+      selectedPayments.includes(p.complaint_id)
+    );
 
-  if (selectedData.length === 0) {
-    alert("No rows selected!");
-    return;
-  }
+    if (selectedData.length === 0) {
+      alert("No rows selected!");
+      return;
+    }
 
-  // Convert to CSV string
-  const headers = Object.keys(selectedData[0]).join(",");
-  const rows = selectedData.map(obj =>
-    Object.values(obj).map(value => `"${value ?? ''}"`).join(",")
-  );
-  const csvContent = [headers, ...rows].join("\n");
+    // Convert to CSV string
+    const headers = Object.keys(selectedData[0]).join(",");
+    const rows = selectedData.map((obj) =>
+      Object.values(obj)
+        .map((value) => `"${value ?? ""}"`)
+        .join(",")
+    );
+    const csvContent = [headers, ...rows].join("\n");
 
-  // Trigger download
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", "selected_complaints.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
+    // Trigger download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "selected_complaints.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const isAllSelected = selectedPayments.length === complaintList.length;
+
+  //pagination logic
+  const totalFilteredPages = Math.ceil(complaintList.length / perPage);
+  const paginatedComplaints = complaintList.slice(
+    (page - 1) * perPage,
+    page * perPage
+  );
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalFilteredPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className={`container-fluid feedback_table_container`}>
@@ -197,7 +215,7 @@ const complaintList = [
                   onChange={(e) =>
                     setSelectedPayments(
                       e.target.checked
-                        ? complaintList.map((p) => p.complaint_id)
+                        ? paginatedComplaints.map((p) => p.complaint_id)
                         : []
                     )
                   }
@@ -217,7 +235,7 @@ const complaintList = [
           </thead>
 
           <tbody>
-            {complaintList.map((item, index) => (
+            {paginatedComplaints.map((item, index) => (
               <tr key={index}>
                 <td>
                   <input
@@ -241,6 +259,91 @@ const complaintList = [
           </tbody>
         </table>
       </div>
+      {/* Pagination */}
+      {totalFilteredPages > 1 && (
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination size="sm">
+            <Pagination.First
+              disabled={page === 1}
+              onClick={() => handlePageChange(1)}
+            />
+            <Pagination.Prev
+              disabled={page === 1}
+              onClick={() => handlePageChange(page - 1)}
+            />
+
+            {/* Show limited page numbers */}
+            {(() => {
+              const maxVisiblePages = 5;
+              let startPage = Math.max(
+                1,
+                page - Math.floor(maxVisiblePages / 2)
+              );
+              let endPage = Math.min(
+                totalFilteredPages,
+                startPage + maxVisiblePages - 1
+              );
+
+              if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+              }
+
+              const pages = [];
+
+              // Show first page if not in range
+              if (startPage > 1) {
+                pages.push(
+                  <Pagination.Item key={1} onClick={() => handlePageChange(1)}>
+                    1
+                  </Pagination.Item>
+                );
+                if (startPage > 2) {
+                  pages.push(<Pagination.Ellipsis key="start-ellipsis" />);
+                }
+              }
+
+              // Show visible pages
+              for (let p = startPage; p <= endPage; p++) {
+                pages.push(
+                  <Pagination.Item
+                    key={p}
+                    active={p === page}
+                    onClick={() => handlePageChange(p)}
+                  >
+                    {p}
+                  </Pagination.Item>
+                );
+              }
+
+              // Show last page if not in range
+              if (endPage < totalFilteredPages) {
+                if (endPage < totalFilteredPages - 1) {
+                  pages.push(<Pagination.Ellipsis key="end-ellipsis" />);
+                }
+                pages.push(
+                  <Pagination.Item
+                    key={totalFilteredPages}
+                    onClick={() => handlePageChange(totalFilteredPages)}
+                  >
+                    {totalFilteredPages}
+                  </Pagination.Item>
+                );
+              }
+
+              return pages;
+            })()}
+
+            <Pagination.Next
+              disabled={page === totalFilteredPages}
+              onClick={() => handlePageChange(page + 1)}
+            />
+            <Pagination.Last
+              disabled={page === totalFilteredPages}
+              onClick={() => handlePageChange(totalFilteredPages)}
+            />
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 };

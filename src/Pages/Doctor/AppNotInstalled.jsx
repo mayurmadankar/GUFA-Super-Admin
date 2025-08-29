@@ -7,19 +7,18 @@ import TextField from "@mui/material/TextField";
 import { fetchLiveDoctorsList } from "../../Components/Redux/authDoctorOnboard";
 import { useSelector } from "react-redux";
 import { Pagination } from "react-bootstrap";
+import { Button } from "@mui/material";
 
 const AppNotInstalled = () => {
-  // console.log("App not install");
-
   const navigate = useNavigate();
 
-  //pagination state
   const [page, setPage] = useState(1);
   const perPage = 10;
 
-  //pagiantion state
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredDoctors, setFilteredDoctors] = useState([]);
+
+  const [selectedDoctors, setSelectedDoctors] = useState([]);
 
   const { liveDoctorList, loading, error } = useSelector(
     (state) => state.doctorUser
@@ -30,7 +29,61 @@ const AppNotInstalled = () => {
       state: { showApproveButton: false }
     });
   };
-  // Speciality mapping
+  const handleCheckboxChange = (doctorId) => {
+    setSelectedDoctors((prev) =>
+      prev.includes(doctorId)
+        ? prev.filter((id) => id !== doctorId)
+        : [...prev, doctorId]
+    );
+  };
+
+  const handleDownloadSelected = () => {
+    const selectedData = filteredDoctors.filter((d) =>
+      selectedDoctors.includes(d.doctor_id)
+    );
+
+    if (selectedData.length === 0) {
+      alert("No doctors selected.");
+      return;
+    }
+
+    const headers = [
+      "Doctor ID",
+      "Doctor Name",
+      "Gender",
+      "Specialization",
+      "Clinic Name",
+      "Location",
+      "Contact Number",
+      "Email"
+    ];
+
+    const rows = selectedData.map((d) => [
+      d.doctor_id,
+      `${d.name || "-"}`,
+      d.gender || "-",
+      specialityMap[d.speciality] || "Unknown",
+      d.clinic_name || "-",
+      d.location || "-",
+      d.number || "-",
+      d.email || "-"
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) =>
+        row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "selected_doctors.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   const specialityMap = {
     1: "General Physician",
     2: "Gynecologist",
@@ -87,13 +140,17 @@ const AppNotInstalled = () => {
     }
   }, [liveDoctorList?.not_logged_in, searchTerm]);
 
-  // Updated pagination logic to use filtered doctors
   const totalPages = Math.ceil(filteredDoctors.length / perPage);
-  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const paginatedAppNotInstalledDoctors = filteredDoctors.slice(
     (page - 1) * perPage,
     page * perPage
   );
+
+  // console.log("Filtered App Not Installed Doctors:", filteredDoctors);
 
   return (
     <div className={`table-responsive ${css.approved_doctor_container}`}>
@@ -101,7 +158,7 @@ const AppNotInstalled = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        mb={1} // optional margin bottom
+        mb={1}
       >
         <h6>Total Doctors:{liveDoctorList?.total_not_logged_in}</h6>
 
@@ -118,9 +175,34 @@ const AppNotInstalled = () => {
         </Box>
       </Box>
 
+      <Button
+        variant="contained"
+        color="primary"
+        className="mt-2 mb-2"
+        onClick={handleDownloadSelected}
+      >
+        Download Selected
+      </Button>
+
       <table className="table text-center">
         <thead className="thead-light">
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={
+                  selectedDoctors.length === filteredDoctors.length &&
+                  filteredDoctors.length > 0
+                }
+                onChange={(e) =>
+                  setSelectedDoctors(
+                    e.target.checked
+                      ? filteredDoctors.map((p) => p.doctor_id)
+                      : []
+                  )
+                }
+              />
+            </th>
             <th>Doctor Id</th>
             <th>Doctor Name</th>
             <th>Qualification</th>
@@ -152,6 +234,13 @@ const AppNotInstalled = () => {
           <tbody>
             {paginatedAppNotInstalledDoctors.map((doctor) => (
               <tr key={doctor.doctor_id} style={{ cursor: "pointer" }}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedDoctors.includes(doctor.doctor_id)}
+                    onChange={() => handleCheckboxChange(doctor.doctor_id)}
+                  />
+                </td>
                 <td>{doctor.doctor_id}</td>
                 <td>{doctor.name}</td>
                 <td>mbbs</td>

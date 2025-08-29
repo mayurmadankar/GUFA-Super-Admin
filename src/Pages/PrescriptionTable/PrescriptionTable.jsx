@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import "./PrescriptionTable.css";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
+import { Pagination } from "react-bootstrap";
 
 const PrescriptionTable = () => {
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const perPage = 10;
 
-      const prescriptionList = [
+  const prescriptionList = [
     {
       prescription_id: "RX001",
       consultation_id: "CONS001",
@@ -28,8 +32,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -41,8 +44,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -54,8 +56,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -67,8 +68,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -80,8 +80,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -93,8 +92,7 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
-    ,
+    },
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -106,9 +104,8 @@ const PrescriptionTable = () => {
       prescription_pdf_url: "https://example.com/prescription2.pdf",
       issued_date: "2025-05-26T14:30:00",
       registration_number: "REG002"
-    }
+    },
 
-      ,
     {
       prescription_id: "RX002",
       consultation_id: "CONS002",
@@ -123,96 +120,119 @@ const PrescriptionTable = () => {
     }
   ];
 
-   const [selectedPriscriptions, setSelectedPriscriptions] = useState([]);
+  const [selectedPriscriptions, setSelectedPriscriptions] = useState([]);
 
-   const handleCheckboxChange = (id) => {
-      setSelectedPriscriptions(prev =>
-        prev.includes(id)
-          ? prev.filter(pid => pid !== id)
-          : [...prev, id]
-      );
-    };
-  
-    //   const handleDownloadSelected = () => {
-    //   const selectedData = prescriptionList.filter(p => selectedPriscriptions.includes(p.payment_id));
-    //   console.log("Selected Payments to Download:", selectedData);
-    //   // Add logic to export selectedData as CSV/PDF if needed
-    // };
+  const handleCheckboxChange = (id) => {
+    setSelectedPriscriptions((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
+    );
+  };
 
-    const handleDownloadSelected = () => {
-  const selectedData = prescriptionList.filter(p =>
-    selectedPriscriptions.includes(p.prescription_id)
+  //   const handleDownloadSelected = () => {
+  //   const selectedData = prescriptionList.filter(p => selectedPriscriptions.includes(p.payment_id));
+  //   console.log("Selected Payments to Download:", selectedData);
+  //   // Add logic to export selectedData as CSV/PDF if needed
+  // };
+
+  const handleDownloadSelected = () => {
+    const selectedData = prescriptionList.filter((p) =>
+      selectedPriscriptions.includes(p.prescription_id)
+    );
+
+    if (selectedData.length === 0) {
+      alert("No prescriptions selected!");
+      return;
+    }
+
+    const headers = [
+      "Prescription ID",
+      "Consultation ID",
+      "Patient ID",
+      "Doctor ID",
+      "Prescribed Medicines",
+      "Advice Notes",
+      "Follow-Up Days",
+      "Prescription PDF URL",
+      "Issued Date",
+      "Registration Number"
+    ];
+
+    const rows = selectedData.map((item) => [
+      item.prescription_id,
+      item.consultation_id,
+      item.patient_id,
+      item.doctor_id,
+      item.prescribed_medicines.join(", "),
+      item.advice_notes,
+      item.follow_up_days,
+      item.prescription_pdf_url,
+      new Date(item.issued_date).toLocaleDateString(),
+      item.registration_number
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map((row) =>
+        row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "prescriptions.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const isAllSelected =
+    selectedPriscriptions.length === prescriptionList.length;
+
+  //pagination logic
+  const totalFilteredPages = Math.ceil(prescriptionList.length / perPage);
+  const paginatedPrescriptionsList = prescriptionList.slice(
+    (page - 1) * perPage,
+    page * perPage
   );
-
-  if (selectedData.length === 0) {
-    alert("No prescriptions selected!");
-    return;
-  }
-
-  const headers = [
-    "Prescription ID",
-    "Consultation ID",
-    "Patient ID",
-    "Doctor ID",
-    "Prescribed Medicines",
-    "Advice Notes",
-    "Follow-Up Days",
-    "Prescription PDF URL",
-    "Issued Date",
-    "Registration Number"
-  ];
-
-  const rows = selectedData.map(item => [
-    item.prescription_id,
-    item.consultation_id,
-    item.patient_id,
-    item.doctor_id,
-    item.prescribed_medicines.join(", "),
-    item.advice_notes,
-    item.follow_up_days,
-    item.prescription_pdf_url,
-    new Date(item.issued_date).toLocaleDateString(),
-    item.registration_number
-  ]);
-
-  const csvContent = [headers, ...rows]
-    .map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(","))
-    .join("\n");
-
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.setAttribute("href", url);
-  link.setAttribute("download", "prescriptions.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-  
-    const isAllSelected = selectedPriscriptions.length === prescriptionList.length;
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalFilteredPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
-  <div className={`container-fluid payment_table_container`}>
+    <div className={`container-fluid payment_table_container`}>
       <h4>Prescriptions</h4>
       <div className="table-responsive">
-          <Button   style={{position:"sticky", top: "0",zIndex: "1"}} variant="contained" color="primary" className="mb-2" onClick={handleDownloadSelected} >
-                Download Selected
-          </Button>
+        <Button
+          style={{ position: "sticky", top: "0", zIndex: "1" }}
+          variant="contained"
+          color="primary"
+          className="mb-2"
+          onClick={handleDownloadSelected}
+        >
+          Download Selected
+        </Button>
         <table
           className="table text-start"
           style={{ overflowX: "auto", whiteSpace: "nowrap" }}
         >
           <thead className="thead-light">
             <tr>
-                 <th>
+              <th>
                 <input
                   type="checkbox"
                   checked={isAllSelected}
                   onChange={(e) =>
                     setSelectedPriscriptions(
-                      e.target.checked ? prescriptionList.map(p => p.prescription_id) : []
+                      e.target.checked
+                        ? paginatedPrescriptionsList.map(
+                            (p) => p.prescription_id
+                          )
+                        : []
                     )
                   }
                 />
@@ -231,12 +251,14 @@ const PrescriptionTable = () => {
           </thead>
 
           <tbody>
-            {prescriptionList.map((item, index) => (
+            {paginatedPrescriptionsList.map((item, index) => (
               <tr key={index}>
-                  <td>
+                <td>
                   <input
                     type="checkbox"
-                    checked={selectedPriscriptions.includes(item.prescription_id)}
+                    checked={selectedPriscriptions.includes(
+                      item.prescription_id
+                    )}
                     onChange={() => handleCheckboxChange(item.prescription_id)}
                   />
                 </td>
@@ -263,7 +285,90 @@ const PrescriptionTable = () => {
           </tbody>
         </table>
       </div>
-    </div>  
+      {/* Pagination */}
+      {totalFilteredPages > 1 && (
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination size="sm">
+            <Pagination.First
+              disabled={page === 1}
+              onClick={() => handlePageChange(1)}
+            />
+            <Pagination.Prev
+              disabled={page === 1}
+              onClick={() => handlePageChange(page - 1)}
+            />
+            {/* Show limited page numbers */}
+            {(() => {
+              const maxVisiblePages = 5;
+              let startPage = Math.max(
+                1,
+                page - Math.floor(maxVisiblePages / 2)
+              );
+              let endPage = Math.min(
+                totalFilteredPages,
+                startPage + maxVisiblePages - 1
+              );
+
+              if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+              }
+
+              const pages = [];
+
+              // Show first page if not in range
+              if (startPage > 1) {
+                pages.push(
+                  <Pagination.Item key={1} onClick={() => handlePageChange(1)}>
+                    1
+                  </Pagination.Item>
+                );
+                if (startPage > 2) {
+                  pages.push(<Pagination.Ellipsis key="start-ellipsis" />);
+                }
+              }
+
+              // Show visible pages
+              for (let p = startPage; p <= endPage; p++) {
+                pages.push(
+                  <Pagination.Item
+                    key={p}
+                    active={p === page}
+                    onClick={() => handlePageChange(p)}
+                  >
+                    {p}
+                  </Pagination.Item>
+                );
+              }
+
+              // Show last page if not in range
+              if (endPage < totalFilteredPages) {
+                if (endPage < totalFilteredPages - 1) {
+                  pages.push(<Pagination.Ellipsis key="end-ellipsis" />);
+                }
+                pages.push(
+                  <Pagination.Item
+                    key={totalFilteredPages}
+                    onClick={() => handlePageChange(totalFilteredPages)}
+                  >
+                    {totalFilteredPages}
+                  </Pagination.Item>
+                );
+              }
+
+              return pages;
+            })()}
+            <Pagination.Next
+              disabled={page === totalFilteredPages}
+              onClick={() => handlePageChange(page + 1)}
+            />
+            <Pagination.Last
+              disabled={page === totalFilteredPages}
+              onClick={() => handlePageChange(totalFilteredPages)}
+            />
+          </Pagination>
+        </div>
+      )}
+    </div>
   );
 };
 
