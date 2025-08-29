@@ -1,0 +1,54 @@
+
+.instantCallContainer {
+  padding-top: 75px;
+  margin-left: 10px;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.customTable {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.customTable th {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  user-select: none;
+}
+
+.customTable td {
+  vertical-align: middle;
+  padding: 10px;
+  font-size: 0.95rem;
+}
+
+.customTable tbody tr:hover {
+  background-color: #f1f5f9;
+  transition: background-color 0.2s;
+}
+
+.customTable .btn-primary {
+  background-color: #2563eb;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+}
+
+.customTable .btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-outline-primary {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.btn-outline-primary:hover {
+  background-color: #2563eb;
+  color: white;
+}

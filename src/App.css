@@ -1,0 +1,341 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+* {
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  font-family: "Open Sans", serif;
+}
+
+header {
+  width: 100%;
+  height: 70px;
+  position: fixed;
+  top: 0px;
+  z-index: 1000;
+  background: #fff;
+}
+
+header .logo {
+  width: 120px;
+}
+
+.searchBox {
+  height: 40px;
+  background: #d9e3f5;
+  border-radius: 6px;
+  padding: 3px 15px;
+}
+
+.searchBox input {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding-left: 5px;
+  font-size: 15px;
+  color: #292929;
+}
+.searchBox svg {
+  font-size: 20px;
+  color: #292929;
+}
+.myAcc {
+  cursor: pointer;
+  padding: 5px;
+  text-align: start;
+}
+.myAcc:hover {
+  background: #d9e3f5;
+}
+.myAcc .userImg img {
+  width: 50px;
+  border-radius: 50%;
+  border: 2px solid rgb(12, 12, 199);
+  object-fit: cover;
+}
+.myAcc .userInfo h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 0px;
+}
+.myAcc .userInfo p {
+  margin-top: 0px;
+  font-size: 10px;
+  color: #000;
+  opacity: 0.7;
+}
+
+/* Left Side(Sodebar) CSS */
+.main .sidebarWrapper {
+  width: 12%;
+  flex: 0 0 12%;
+}
+
+.main .sidebarWrapper .sidebar {
+  width: 12%;
+  height: 100vh;
+  position: fixed;
+  top: 70px;
+  left: 0px;
+  background: #fff;
+  overflow-y: scroll;
+}
+.main .sidebarWrapper .sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+.main .sidebarWrapper:hover .sidebar::-webkit-scrollbar {
+  display: block; /* Ensure the scrollbar is visible on hover */
+  width: 3px; /* Adjust scrollbar width as needed */
+}
+
+.main .sidebarWrapper:hover .sidebar::-webkit-scrollbar-thumb {
+  background: #2e80ec; /* Scrollbar thumb color */
+  border-radius: 5px; /* Rounded corners for scrollbar thumb */
+}
+
+.main .sidebarWrapper .sidebar ul {
+  padding: 10px 10px;
+}
+
+.main .sidebarWrapper .sidebar ul a:hover {
+  padding-top: 10px;
+  padding-bottom: 15px;
+  background: #e5e5f5;
+  border-radius: 4px;
+}
+
+.sidebar ul a button {
+  justify-content: start;
+  color: #5e5d72;
+  font-weight: 600;
+  padding: 10px 5px;
+  text-transform: capitalize;
+}
+
+.sidebar ul a button .icon svg {
+  font-size: 20px;
+}
+.sidebar a.active button {
+  background-color: #596061; /* Light highlight color */
+  color: #fff; /* Active text/icon color */
+  font-weight: bold;
+}
+
+.logoutWrapper {
+  padding: 0px 10px;
+}
+
+.logoutWrapper .logoutBox {
+  width: 100%;
+  height: 70px;
+  background-color: #bcd2fd;
+  border-radius: 10px;
+  margin-bottom: 100px;
+  margin-top: -20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logoutWrapper .logoutBox button {
+  font-size: 13px;
+  font-weight: 600;
+}
+.logoutWrapper .logoutBox button svg {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+/* Right side main content */
+.main .content {
+  background-color: #d0d4d8;
+  width: 100%;
+}
+/************ DASHBOARD **********CSS */
+.right-content {
+  padding: 90px 20px 40px 20px;
+  height: 100vh;
+}
+.dashboardBoxWrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+.dashboardCard {
+  height: 110px;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dashboardCard:hover {
+  transform: translateY(-5px);
+}
+.dashboardCardOne {
+  background: linear-gradient(to right, #1da256, #48d483);
+}
+.dashboardCardTwo {
+  background: linear-gradient(to right, #c012e2, #eb64fe);
+}
+.dashboardCardThree {
+  background: linear-gradient(to right, #2c78e5, #60aff5);
+}
+.dashboardCardFour {
+  background: linear-gradient(to right, #ee4115, #ee8739);
+}
+.dashboardCardFive {
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+}
+.dashboardCardSix {
+  background: linear-gradient(to right, #752785, #c536d8);
+}
+.dashboardCardSeven {
+  background: linear-gradient(to right, #28da54, #db8746);
+}
+.dashboardCardEight {
+  background: linear-gradient(to right, #e1950e, #f3cd29);
+}
+
+.icon svg {
+  font-size: 40px;
+}
+
+.box {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgb(93, 93, 248);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 20px;
+}
+.box:hover {
+  transform: translateY(-5px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .right-content {
+    padding: 90px 10px 40px 30px;
+  }
+  .right_dashboard_div {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .dashboardCard {
+    height: auto;
+    padding: 15px;
+  }
+  .icon svg {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .right_dashboard_div {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .right-content {
+    padding: 90px 10px 40px 30px;
+  }
+  .dashboardCard {
+    padding: 10px;
+  }
+  .icon svg {
+    font-size: 30px;
+  }
+}
+
+/* Styles for screens smaller than 1200px (e.g., desktops) */
+@media (max-width: 1200px) {
+  .sidebar ul a {
+    text-decoration: none;
+  }
+  .sidebar ul a button {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+  }
+  .icon svg {
+    color: #5e5d72;
+    font-size: 25px;
+  }
+}
+
+/* Styles for screens smaller than 768px (e.g., desktops) */
+@media (max-width: 768px) {
+  .main .sidebarWrapper .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    height: calc(100vh - 70px);
+    width: 17%;
+    overflow-y: auto;
+  }
+
+  .sidebar ul a button {
+    font-size: 8px !important;
+  }
+  .icon svg {
+    color: #5e5d72;
+    font-size: 15px;
+  }
+
+  .logoutWrapper {
+    padding: 0px 10px;
+  }
+}
+
+/* Styles for screens extra small less than 565px (e.g., mobile) */
+@media (max-width: 575px) {
+  .myAcc .userImg img {
+    width: 40px;
+  }
+
+  .myAcc .userInfo h4 {
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 0px;
+  }
+  .myAcc .userInfo p {
+    margin-top: 0px;
+    font-size: 7px;
+    color: #000;
+    opacity: 0.7;
+  }
+
+  header .logo img {
+    width: 70px;
+  }
+
+  .logoutWrapper .logoutBox {
+    width: 100%;
+    height: 50px;
+    background-color: #bcd2fd;
+    border-radius: 10px;
+    margin-bottom: 100px;
+    margin-top: -20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .logoutWrapper .logoutBox button {
+    width: 15px;
+    font-size: 7px;
+    font-weight: 600;
+  }
+  .logoutWrapper .logoutBox button svg {
+    display: none;
+  }
+}
+

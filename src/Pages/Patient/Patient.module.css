@@ -1,0 +1,22 @@
+.patient_container {
+  padding-top: 75px;
+  margin-left: 10px;
+  width: 85%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+.view_patient_container{
+    padding-top: 75px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    min-height: 100vh;
+}
+.view_patient_top_font{
+    font-size: 15px;
+}
+
+html, body {
+  overflow-x: hidden;
+}

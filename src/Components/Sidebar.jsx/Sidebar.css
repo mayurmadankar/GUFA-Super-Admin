@@ -1,0 +1,5 @@
+.sidebar a.active button {
+  background-color: #e0f7fa; /* Light highlight color */
+  color: #00796b;            /* Active text/icon color */
+  font-weight: bold;
+}

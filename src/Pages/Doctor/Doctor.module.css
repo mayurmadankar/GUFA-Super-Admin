@@ -1,0 +1,32 @@
+/* .doctor_container{
+    padding-top: 75px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    min-height: 100vh;
+} */
+.doctor_dashboard_container{
+    padding-top: 75px;
+    margin-left: 10px;
+    width: 100%;
+   min-height: 100vh;
+}
+
+.view_doctor_container{
+    padding-top: 75px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    min-height: 100vh;
+}
+.generalInfo_font{
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.stickyColumn {
+  position: sticky;
+  right: 0;
+  background-color: white;
+  /* z-index: 2; */
+}
